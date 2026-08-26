@@ -23,14 +23,34 @@
       padding: 0; 
       height: 100%; 
       overflow: hidden; 
-      background-color: #000000; /* Evita flashes brancos no fundo do iOS antes do app carregar */
+      background-color: #000000; 
     }
+    
+    /* TRUQUE PARA ESCONDER O RODAPÉ DO STREAMLIT */
     iframe { 
-      border: none; 
+      border: none !important; /* Remove qualquer borda visível padrão */
+      outline: none !important;
       width: 100%; 
-      height: 100%; 
-      /* Correção para rolagem suave no Safari do iOS */
+      
+      /* Faz o iframe ser um pouquinho mais alto que a tela do celular */
+      height: calc(100% + 40px) !important; 
+      
+      /* Empurra o rodapé para baixo, sumindo com o 'Built with Streamlit' */
+      margin-bottom: -40px !important; 
+      
       -webkit-overflow-scrolling: touch; 
+    }
+    
+    div[data-testid="stHtml"] iframe,
+    div[data-testid="stCustomComponentV1"] {
+      display: none !important;
+      height: 0px !important;
+      margin: 0px !important;
+      padding: 0px !important;
+    }
+    
+    .element-container:has(iframe) {
+      display: none !important;
     }
   </style>
 </head>
