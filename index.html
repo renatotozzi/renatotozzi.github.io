@@ -11,36 +11,45 @@
   <meta name="apple-mobile-web-app-title" content="My PFM">
   
   <!-- Ícone para iOS (Reutilizando seu arquivo de 512px) -->
-  <!-- O iOS vai auto-ajustar o tamanho e aplicar os cantos arredondados nativos -->
   <link rel="apple-touch-icon" href="icon.png">
   
   <!-- Link do Manifesto para Android/Chrome -->
   <link rel="manifest" href="manifest.json">
   
   <style>
+    /* Zera o documento e impede qualquer rolagem da janela externa */
     body, html { 
-      margin: 0; 
-      padding: 0; 
-      height: 100%; 
-      overflow: hidden; 
+      margin: 0 !important; 
+      padding: 0 !important; 
+      height: 100% !important; 
+      width: 100% !important;
+      overflow: hidden !important; 
       background-color: #000000; 
     }
     
-    /* TRUQUE PARA ESCONDER O RODAPÉ DO STREAMLIT */
+    /* ENVELOPE MÁSCARA: Limita o tamanho à tela exata do dispositivo e esconde rebarbas */
+    .pwa-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden !important;
+    }
+    
+    /* IFRAME: Estica 50px para baixo além do limite da tela, jogando o rodapé no escuro */
     iframe { 
-      border: none !important; /* Remove qualquer borda visível padrão */
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: none !important; 
       outline: none !important;
-      width: 100%; 
-      
-      /* Faz o iframe ser um pouquinho mais alto que a tela do celular */
-      height: calc(100% + 40px) !important; 
-      
-      /* Empurra o rodapé para baixo, sumindo com o 'Built with Streamlit' */
-      margin-bottom: -40px !important; 
-      
+      width: 100% !important; 
+      height: calc(100% + 50px) !important; 
       -webkit-overflow-scrolling: touch; 
     }
     
+    /* Limpeza de componentes internos do Streamlit */
     div[data-testid="stHtml"] iframe,
     div[data-testid="stCustomComponentV1"] {
       display: none !important;
@@ -56,11 +65,14 @@
 </head>
 <body>
   
-  <iframe
-    src="https://my-pfm.streamlit.app?embed=true"
-    sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
-    allow="geolocation; camera; microphone"
-  ></iframe>
+  <!-- Container adicionado para criar o efeito de corte rígido (clipping) -->
+  <div class="pwa-wrapper">
+    <iframe
+      src="https://my-pfm.streamlit.app?embed=true"
+      sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+      allow="geolocation; camera; microphone"
+    ></iframe>
+  </div>
 
   <script>
     if ('serviceWorker' in navigator) {
