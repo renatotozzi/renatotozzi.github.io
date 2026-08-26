@@ -12,7 +12,11 @@
 </head>
 <body>
   <!-- Append ?embed=true to remove Streamlit padding, footers, and headers -->
-  <iframe src="https://my-pfm.streamlit.app?embed=true"></iframe>
+  <iframe
+    src="https://my-pfm.streamlit.app?embed=true"
+    sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+    allow="geolocation; camera; microphone"
+  ></iframe>
 
   <script>
     if ('serviceWorker' in navigator) {
