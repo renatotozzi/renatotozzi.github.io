@@ -1,6 +1,6 @@
 {
   "name": "My PFM",
-  "short_name": "DataApp",
+  "short_name": "My PFM",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -8,8 +8,9 @@
   "icons": [
     {
       "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
