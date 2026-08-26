@@ -37,15 +37,22 @@
       overflow: hidden !important;
     }
     
-    /* IFRAME: Estica 50px para baixo além do limite da tela, jogando o rodapé no escuro */
+    /* IFRAME: Ajustado milimetricamente para sangrar as bordas para fora da tela */
     iframe { 
       position: absolute;
-      top: 0;
-      left: 0;
+      
+      /* Empurra o iframe 2px para cima e 2px para a esquerda */
+      top: -2px !important;
+      left: -2px !important;
+      
       border: none !important; 
       outline: none !important;
-      width: 100% !important; 
-      height: calc(100% + 50px) !important; 
+      box-shadow: none !important;
+      
+      /* Compensa o deslocamento nas laterais (+4px) e no topo/fundo (+54px) */
+      width: calc(100% + 4px) !important; 
+      height: calc(100% + 54px) !important; 
+      
       -webkit-overflow-scrolling: touch; 
     }
     
@@ -65,10 +72,9 @@
 </head>
 <body>
   
-  <!-- Container adicionado para criar o efeito de corte rígido (clipping) -->
   <div class="pwa-wrapper">
     <iframe
-      src="https://my-pfm.streamlit.app?embed=true"
+      src="https://streamlit.app"
       sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
       allow="geolocation; camera; microphone"
     ></iframe>
