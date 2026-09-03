@@ -57,43 +57,19 @@
       background: var(--shell-background) !important;
     }
 
-    /* Navegador/Safari — mantém o comportamento que já funciona */
     #streamlit-app {
       position: absolute !important;
-      top: -10px !important;
+      top: calc(env(safe-area-inset-top, 0px) - 12px);
       left: -10px !important;
-    
       width: calc(100% + 20px) !important;
-      height: calc(100% + 65px) !important;
-    
+      height: calc(100dvh - env(safe-area-inset-top, 0px));
       border: 0 !important;
       outline: none !important;
       box-shadow: none !important;
-    
       opacity: 0;
       transition: opacity 320ms ease;
       -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Aplicativo instalado como PWA */
-    @media (display-mode: standalone) {
-      #streamlit-app {
-        position: fixed !important;
-    
-        /* Barra do Streamlit logo abaixo da barra de status */
-        top: calc(env(safe-area-inset-top, 0px) - 12px) !important;
-    
-        /*
-          100lvh usa a viewport completa, sem reservar o espaço
-          fantasma da barra inferior do Safari.
-    
-          77px = 12px recuperados no topo + 65px de sangramento inferior.
-        */
-        height: calc(
-          100lvh - env(safe-area-inset-top, 0px) + 77px
-        ) !important;
       }
-    }
     
     #streamlit-app.is-ready {
       opacity: 1;
