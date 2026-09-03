@@ -59,10 +59,10 @@
 
     #streamlit-app {
       position: absolute !important;
-      top: -10px !important;
+      top: calc(env(safe-area-inset-top, 0px) - 10px);
       left: -10px !important;
       width: calc(100% + 20px) !important;
-      height: calc(100% + 65px) !important;
+      height: calc(100dvh - env(safe-area-inset-top, 0px) + 65px);
       border: 0 !important;
       outline: none !important;
       box-shadow: none !important;
@@ -199,7 +199,7 @@
       revealed = true;
 
       const minimumVisibleTime = 1200;
-      const streamlitPaintDelay = 700;
+      const streamlitPaintDelay = 2500;
       const elapsed = performance.now() - splashStartedAt;
       const wait = Math.max(0, minimumVisibleTime - elapsed) + streamlitPaintDelay;
 

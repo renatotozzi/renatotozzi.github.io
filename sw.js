@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-pfm-shell-v2';
+const CACHE_NAME = 'my-pfm-shell-v5';
 const SHELL_FILES = [
   './',
   './index.html',
