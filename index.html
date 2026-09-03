@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <title>my-pfm</title>
 
   <meta name="description" content="Organize, planeje e acompanhe suas finanças pessoais.">
@@ -43,55 +43,35 @@
     body {
       margin: 0 !important;
       padding: 0 !important;
-      width: 100% !important;
       height: 100% !important;
+      width: 100% !important;
       overflow: hidden !important;
-      background: var(--shell-background) !important;
+      background-color: var(--shell-background) !important;
     }
     
     .pwa-wrapper {
-      /*
-       * O wrapper passa a ocupar a viewport real usando as quatro bordas.
-       * Não usamos 100dvh porque o iPhone estava reservando o espaço
-       * correspondente à barra inferior do Safari.
-       */
-      position: fixed !important;
+      position: absolute !important;
       top: 0 !important;
+      left: 0 !important;
       right: 0 !important;
       bottom: 0 !important;
-      left: 0 !important;
-    
-      width: auto !important;
-      height: auto !important;
-    
+      width: 100% !important;
+      height: 100% !important;
       overflow: hidden !important;
-      background: var(--shell-background) !important;
+      background-color: var(--shell-background) !important;
     }
     
     #streamlit-app {
       position: absolute !important;
-    
-      /*
-       * Respeita a barra de status e esconde os pixels superiores
-       * criados pelo Streamlit.
-       */
-      top: calc(env(safe-area-inset-top, 0px) - 14px) !important;
+      top: -10px !important;
       left: -10px !important;
-    
-      width: calc(100% + 20px) !important;
-    
-      /*
-       * 79px = 14px recuperados no topo + 65px de sangramento inferior.
-       * A porcentagem agora é calculada sobre o wrapper que ocupa
-       * a viewport inteira da PWA.
-       */
-      height: calc(
-        100% - env(safe-area-inset-top, 0px) + 79px
-      ) !important;
     
       border: 0 !important;
       outline: none !important;
       box-shadow: none !important;
+    
+      width: calc(100% + 20px) !important;
+      height: calc(100% + 65px) !important;
     
       opacity: 0;
       transition: opacity 320ms ease;
