@@ -39,7 +39,8 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0 !important;
       padding: 0 !important;
       width: 100% !important;
@@ -47,25 +48,51 @@
       overflow: hidden !important;
       background: var(--shell-background) !important;
     }
-
+    
     .pwa-wrapper {
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
+      /*
+       * O wrapper passa a ocupar a viewport real usando as quatro bordas.
+       * Não usamos 100dvh porque o iPhone estava reservando o espaço
+       * correspondente à barra inferior do Safari.
+       */
+      position: fixed !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      left: 0 !important;
+    
+      width: auto !important;
+      height: auto !important;
+    
       overflow: hidden !important;
       background: var(--shell-background) !important;
     }
-
+    
     #streamlit-app {
       position: absolute !important;
-      top: calc(env(safe-area-inset-top, 0px) - 10px);
+    
+      /*
+       * Respeita a barra de status e esconde os pixels superiores
+       * criados pelo Streamlit.
+       */
+      top: calc(env(safe-area-inset-top, 0px) - 14px) !important;
       left: -10px !important;
+    
       width: calc(100% + 20px) !important;
-      height: calc(100dvh - env(safe-area-inset-top, 0px) + 65px);
+    
+      /*
+       * 79px = 14px recuperados no topo + 65px de sangramento inferior.
+       * A porcentagem agora é calculada sobre o wrapper que ocupa
+       * a viewport inteira da PWA.
+       */
+      height: calc(
+        100% - env(safe-area-inset-top, 0px) + 79px
+      ) !important;
+    
       border: 0 !important;
       outline: none !important;
       box-shadow: none !important;
+    
       opacity: 0;
       transition: opacity 320ms ease;
       -webkit-overflow-scrolling: touch;
@@ -74,26 +101,29 @@
     #streamlit-app.is-ready {
       opacity: 1;
     }
-
+    
     .splash {
       position: fixed;
       inset: 0;
       z-index: 10;
       display: grid;
       place-items: center;
-      padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+      padding:
+        max(24px, env(safe-area-inset-top))
+        24px
+        max(24px, env(safe-area-inset-bottom));
       background: var(--shell-background);
       opacity: 1;
       visibility: visible;
       transition: opacity 320ms ease, visibility 320ms ease;
     }
-
+    
     .splash.is-hidden {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
-
+    
     .splash-brand {
       display: flex;
       flex-direction: column;
@@ -101,38 +131,50 @@
       text-align: center;
       transform: translateY(-4vh);
     }
-
+    
     .splash-mark {
       width: clamp(104px, 27vw, 144px);
       height: auto;
       display: block;
       margin-bottom: 18px;
     }
-
+    
     .splash-name {
       margin: 0;
       color: var(--brand-text);
-      font: 800 clamp(48px, 13vw, 68px)/0.95 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font:
+        800 clamp(48px, 13vw, 68px) / 0.95
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
       letter-spacing: -0.055em;
     }
-
+    
     .splash-name span {
       color: var(--brand-lilac);
     }
-
+    
     .splash-slogan {
       margin: 18px 0 0;
       color: var(--slogan-text);
-      font: 500 clamp(15px, 4vw, 19px)/1.3 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font:
+        500 clamp(15px, 4vw, 19px) / 1.3
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
       letter-spacing: 0.01em;
     }
-
+    
     .loading-dots {
       display: flex;
       gap: 8px;
       margin-top: 34px;
     }
-
+    
     .loading-dots span {
       width: 7px;
       height: 7px;
@@ -140,20 +182,41 @@
       background: var(--brand-lilac);
       animation: pulse 1.2s ease-in-out infinite;
     }
-
-    .loading-dots span:nth-child(2) { animation-delay: 160ms; }
-    .loading-dots span:nth-child(3) { animation-delay: 320ms; }
-
+    
+    .loading-dots span:nth-child(2) {
+      animation-delay: 160ms;
+    }
+    
+    .loading-dots span:nth-child(3) {
+      animation-delay: 320ms;
+    }
+    
     @keyframes pulse {
-      0%, 80%, 100% { opacity: 0.28; transform: scale(0.82); }
-      40% { opacity: 1; transform: scale(1); }
+      0%,
+      80%,
+      100% {
+        opacity: 0.28;
+        transform: scale(0.82);
+      }
+    
+      40% {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
-
+    
     @media (prefers-reduced-motion: reduce) {
-      #streamlit-app, .splash { transition: none; }
-      .loading-dots span { animation: none; opacity: 0.65; }
+      #streamlit-app,
+      .splash {
+        transition: none;
+      }
+    
+      .loading-dots span {
+        animation: none;
+        opacity: 0.65;
+      }
     }
-
+    
     div[data-testid="stHtml"] iframe,
     div[data-testid="stCustomComponentV1"] {
       display: none !important;
@@ -161,7 +224,7 @@
       margin: 0 !important;
       padding: 0 !important;
     }
-
+    
     .element-container:has(iframe) {
       display: none !important;
     }
