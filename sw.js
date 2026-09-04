@@ -1,35 +1,54 @@
-// Nome do cache (mesmo vazio, é bom declarar para validação do navegador)
-const CACHE_NAME = 'my-pfm-cache-v1';
+const CACHE_NAME = 'my-pfm-shell-v12';
+const SHELL_FILES = [
+  './',
+  './index.html',
+  './manifest.json',
+  './pig-mark.png',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png'
+];
 
-// Evento de Instalação: Obrigatório para o PWA ser instalável
 self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_FILES)));
   self.skipWaiting();
 });
 
-// Evento de Ativação: Limpa caches antigos e assume o controle imediatamente
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
 });
 
-// Evento de Interceptação de Requisições (Fetch)
 self.addEventListener('fetch', (event) => {
-  const url = event.request.url;
+  if (event.request.method !== 'GET') return;
 
-  // REGRA DE SEGURANÇA PARA STREAMLIT: 
-  // Ignora completamente WebSockets (_stcore/stream) e requisições que não sejam GET (como POST de dados)
-  if (
-    url.includes('_stcore/stream') || 
-    event.request.method !== 'GET' ||
-    url.includes('authkit.streamlit.io')
-  ) {
-    return; // Deixa o navegador tratar nativamente fora do Service Worker
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.origin !== self.location.origin) return;
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('./index.html'))
+    );
+    return;
   }
 
-  // Para requisições comuns de navegação, envia direto para a rede
   event.respondWith(
-    fetch(event.request).catch(() => {
-      // Caso o usuário esteja totalmente offline, tenta buscar do cache apenas como última alternativa
-      return caches.match(event.request);
+    caches.match(event.request).then((cached) => {
+      const fresh = fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => cached);
+
+      return cached || fresh;
     })
   );
 });
