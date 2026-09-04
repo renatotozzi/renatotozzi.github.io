@@ -234,17 +234,24 @@
   <script>
     const iframe = document.getElementById('streamlit-app');
     const splash = document.getElementById('splash');
+    const streamlitOrigin = new URL(iframe.src).origin;
+    const readyMessages = new Set([
+      'MY_PFM_LOGIN_READY',
+      'MY_PFM_APP_READY'
+    ]);
     const splashStartedAt = performance.now();
+    const minimumVisibleTime = 1200;
     let revealed = false;
+    let fallbackTimer;
 
     function revealApp() {
       if (revealed) return;
       revealed = true;
+      window.clearTimeout(fallbackTimer);
+      window.removeEventListener('message', handleStreamlitReady);
 
-      const minimumVisibleTime = 1200;
-      const streamlitPaintDelay = 2500;
       const elapsed = performance.now() - splashStartedAt;
-      const wait = Math.max(0, minimumVisibleTime - elapsed) + streamlitPaintDelay;
+      const wait = Math.max(0, minimumVisibleTime - elapsed);
 
       window.setTimeout(() => {
         iframe.classList.add('is-ready');
@@ -252,8 +259,22 @@
       }, wait);
     }
 
-    iframe.addEventListener('load', revealApp, { once: true });
-    window.setTimeout(revealApp, 15000);
+    function handleStreamlitReady(event) {
+      if (event.origin !== streamlitOrigin) return;
+
+      const messageType = typeof event.data === 'string'
+        ? event.data
+        : event.data?.type;
+
+      if (readyMessages.has(messageType)) {
+        revealApp();
+      }
+    }
+
+    window.addEventListener('message', handleStreamlitReady);
+
+    // Plano B: evita que o splash fique preso se o sinal não chegar.
+    fallbackTimer = window.setTimeout(revealApp, 30000);
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
